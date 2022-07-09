@@ -1,10 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {Button, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {
+  Button,
+  FlatList,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {Character} from 'rickmortyapi/dist/interfaces';
+import {Backend} from '../../communications';
+import {Spacer} from '../../components';
 import {
   StackNavigationProp,
   StackNavigatorRoutes,
   StackRouteProp,
 } from '../../routes/stackRouteList';
+import HomeCharCard from './components/HomeCharCard';
 
 export type HomeScreenParams = undefined;
 
@@ -14,6 +26,32 @@ interface Props {
 }
 
 const HomeScreen = ({navigation}: Props) => {
+  const [characters, setCaracters] = useState([] as Character[]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getList();
+  }, []);
+
+  const renderItem = (item: {item: Character}) => {
+    return <HomeCharCard character={item.item} />;
+  };
+
+  const getList = () => {
+    setLoading(true);
+    Backend.Character.getAllCharacters()
+      .then(chars => {
+        console.log('HOME ', chars);
+        setCaracters(chars);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setCaracters([]);
+        setLoading(false);
+      });
+  };
+
   return (
     <SafeAreaView>
       <Text>Prova</Text>
@@ -23,27 +61,17 @@ const HomeScreen = ({navigation}: Props) => {
           navigation.navigate(StackNavigatorRoutes.Detail, {});
         }}
       />
+      <FlatList
+        data={characters}
+        renderItem={renderItem}
+        ItemSeparatorComponent={() => <Spacer space={40} />}
+        refreshing={loading}
+        onRefresh={getList}
+      />
     </SafeAreaView>
   );
 };
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+const styles = StyleSheet.create({});

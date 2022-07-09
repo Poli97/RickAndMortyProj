@@ -3,7 +3,7 @@ import {baseUrl} from '../configs';
 
 /**
  * Get all the characters in the first page (limited to 20)
- * @returns a promise with all the 20 characters in the first pagination
+ * @returns All the 20 characters in the first pagination
  */
 export async function getAllCharacters(): Promise<Character[]> {
   const endpoint = '/character';
@@ -12,8 +12,7 @@ export async function getAllCharacters(): Promise<Character[]> {
     fetch(`${baseUrl}${endpoint}`)
       .then(result => {
         if (result.ok) {
-          console.log('Chiamata a buon fine');
-          console.log(result);
+          console.log('getAllCharacters SUCCESS', result);
           result
             .json()
             .then(json => {
@@ -40,9 +39,9 @@ export async function getAllCharacters(): Promise<Character[]> {
 }
 
 /**
- * Get all the characters in the given page (limited to 20). Usefull for pagination pourposes.
+ * Get all the characters (limited to 20) in the given `pageId` page. Usefull for pagination pourposes.
  * @param pageId the number of the page
- * @returns A promise containing 20 characters of the given 'pageId' page
+ * @returns The 20 characters of the given `pageId` page
  */
 export async function getAllCharactersInPageId(
   pageId: number,
@@ -53,8 +52,7 @@ export async function getAllCharactersInPageId(
     fetch(`${baseUrl}${endpoint}`)
       .then(result => {
         if (result.ok) {
-          console.log('Chiamata a buon fine');
-          console.log(result);
+          console.log('getAllCharactersInPageId SUCCESS', result);
           result
             .json()
             .then(json => {
@@ -64,17 +62,59 @@ export async function getAllCharactersInPageId(
               resolve(characters);
             })
             .catch(err => {
-              console.log('getAllCharacters json() ERROR ', err);
+              console.log('getAllCharactersInPageId json() ERROR ', err);
               Promise.reject(err);
             });
         } else {
           console.log(result);
-          console.log('getAllCharacters result ERROR. status:', result.status);
+          console.log(
+            'getAllCharactersInPageId result ERROR. status:',
+            result.status,
+          );
           reject();
         }
       })
       .catch(err => {
-        console.log('getAllCharacters fetch ERROR ', err);
+        console.log('getAllCharactersInPageId fetch ERROR ', err);
+        reject(err);
+      });
+  });
+}
+
+/**
+ * Get character info by `id`
+ * @param id the id of the character wanted
+ * @returns Promise with the character info
+ */
+export async function getCharacterById(
+  id: number,
+): Promise<Character | undefined> {
+  const endpoint = '/character/' + id.toString();
+
+  return new Promise((resolve, reject) => {
+    fetch(`${baseUrl}${endpoint}`)
+      .then(result => {
+        if (result.ok) {
+          console.log('getCharacterById SUCCESS', result);
+          result
+            .json()
+            .then(json => {
+              const character = json as Character;
+              console.log(character);
+              resolve(character);
+            })
+            .catch(err => {
+              console.log('getCharacterById json() ERROR ', err);
+              Promise.reject(err);
+            });
+        } else {
+          console.log(result);
+          console.log('getCharacterById result ERROR. status:', result.status);
+          reject();
+        }
+      })
+      .catch(err => {
+        console.log('getCharacterById fetch ERROR ', err);
         reject(err);
       });
   });

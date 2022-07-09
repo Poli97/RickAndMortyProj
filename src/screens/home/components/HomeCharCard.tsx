@@ -1,20 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
 
 interface Props {
   character: Character;
+  onPress: () => void;
 }
 
-const HomeCharCard = ({character}: Props) => {
+const HomeCharCard = ({character, onPress}: Props) => {
   return (
-    <View>
-      <Image source={{uri: character.image}} style={{width: 50, height: 50}} />
+    <TouchableOpacity onPress={onPress}>
+      <Image source={{uri: character.image}} style={styles.image} />
       <Text>{character.name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 export default HomeCharCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  image: {
+    width: 50,
+    height: 50,
+  },
+});

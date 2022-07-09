@@ -1,13 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Button,
-  FlatList,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Button, FlatList, SafeAreaView, Text} from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
 import {Spacer} from '../../components';
@@ -30,14 +22,21 @@ const HomeScreen = ({navigation}: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getList();
+    _getCharactersList();
   }, []);
 
   const renderItem = (item: {item: Character}) => {
-    return <HomeCharCard character={item.item} />;
+    return (
+      <HomeCharCard
+        character={item.item}
+        onPress={() =>
+          navigation.navigate(StackNavigatorRoutes.Detail, {id: item.item.id})
+        }
+      />
+    );
   };
 
-  const getList = () => {
+  const _getCharactersList = () => {
     setLoading(true);
     Backend.Character.getAllCharacters()
       .then(chars => {
@@ -66,12 +65,10 @@ const HomeScreen = ({navigation}: Props) => {
         renderItem={renderItem}
         ItemSeparatorComponent={() => <Spacer space={40} />}
         refreshing={loading}
-        onRefresh={getList}
+        onRefresh={_getCharactersList}
       />
     </SafeAreaView>
   );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({});

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, FlatList, SafeAreaView, Text} from 'react-native';
+import {FlatList, SafeAreaView} from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
 import {Spacer} from '../../components';
@@ -53,13 +53,6 @@ const HomeScreen = ({navigation}: Props) => {
 
   return (
     <SafeAreaView>
-      <Text>Prova</Text>
-      <Button
-        title="Detail"
-        onPress={() => {
-          navigation.navigate(StackNavigatorRoutes.Detail, {});
-        }}
-      />
       <FlatList
         data={characters}
         renderItem={renderItem}

@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text} from 'react-native';
 import {Character, Location} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
-import {RoundImage} from '../../components';
 import {
   StackNavigationProp,
   StackNavigatorRoutes,
   StackRouteProp,
 } from '../../routes/stackRouteList';
+import DetailHead from './components/DetailHead';
+import DetailInfo from './components/DetailInfo';
+import LocationInfo from './components/LocationInfo';
 
 export type DetailScreenParams = {
   id?: number;
@@ -23,12 +25,13 @@ const DetailScreen = ({route}: Props) => {
   const [characterInfo, setCharacterInfo] = useState(
     undefined as Character | undefined,
   );
-  const [locationInfo, setLocationInfo] = useState(
+  const [lastSeenInfo, setLastSeenInfo] = useState(
     undefined as Location | undefined,
   );
   const [originInfo, setOriginInfo] = useState(
     undefined as Location | undefined,
   );
+  const [chaptersNames, setChaptersNames] = useState([] as string[]);
 
   useEffect(() => {
     _getAllCharacterInfos(id);
@@ -43,7 +46,7 @@ const DetailScreen = ({route}: Props) => {
         const url = charInfos.location.url;
         if (url) {
           const location = await Backend.Location.getLocationByUrl(url);
-          setLocationInfo(location);
+          setLastSeenInfo(location);
         } else {
           console.log('Unknown location');
         }
@@ -60,17 +63,38 @@ const DetailScreen = ({route}: Props) => {
       }
 
       if (charInfos) {
-        await Backend.Chapter.getChaptersNameByUrls(charInfos.episode);
+        const chaptersN = await Backend.Chapter.getChaptersNamesByUrls(
+          charInfos.episode,
+        );
+        setChaptersNames(chaptersN);
       }
     } catch (err) {
-      console.log(err);
+      console.log('_getAllCharacterInfos ERROR ', err);
     }
   };
 
   return (
-    <SafeAreaView>
-      <Text>Dettaglio: {id}</Text>
-      {characterInfo && <RoundImage image={characterInfo.image} size={50} />}
+    <SafeAreaView style={styles.safeContainer}>
+      <ScrollView style={styles.scrollContainer}>
+        {characterInfo && (
+          <>
+            <DetailHead image={characterInfo.image} name={characterInfo.name} />
+            <DetailInfo info={characterInfo} />
+          </>
+        )}
+
+        {originInfo && (
+          <LocationInfo locationType="origin" originInfo={originInfo} />
+        )}
+
+        {lastSeenInfo && (
+          <LocationInfo locationType="lastSeen" originInfo={lastSeenInfo} />
+        )}
+
+        {chaptersNames.map(n => (
+          <Text>{n}</Text>
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -78,20 +102,12 @@ const DetailScreen = ({route}: Props) => {
 export default DetailScreen;
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  safeContainer: {
+    alignItems: 'center',
+    flex: 1,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+
+  scrollContainer: {
+    width: '95%',
   },
 });

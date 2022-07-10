@@ -15,5 +15,9 @@ export const Backend = {
    * Resource for locations related APIs
    */
   Location,
+
+  /**
+   * Resource for chapters related APIs
+   */
   Chapter,
 };

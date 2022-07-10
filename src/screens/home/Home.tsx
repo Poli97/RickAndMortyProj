@@ -1,5 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+} from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
 import {Spacer} from '../../components';
@@ -21,6 +26,7 @@ const HomeScreen = ({navigation}: Props) => {
   const [characters, setCaracters] = useState([] as Character[]);
   const [loading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState(null as string | null);
+  const [nextLoading, setNextLoading] = useState(false);
 
   useEffect(() => {
     _getCharactersList();
@@ -41,6 +47,7 @@ const HomeScreen = ({navigation}: Props) => {
     setLoading(true);
     setCaracters([]);
     setNextPage(null);
+    setNextLoading(false);
     Backend.Character.getAllCharacters()
       .then(homeList => {
         console.log('HOME ', homeList);
@@ -59,17 +66,22 @@ const HomeScreen = ({navigation}: Props) => {
   const _getNextCharacters = () => {
     console.log('End reached');
     if (nextPage) {
-      Backend.Character.getAllCharactersByPageUrl(nextPage).then(nextList => {
-        console.log('HOME ', nextList);
+      setNextLoading(true);
+      Backend.Character.getAllCharactersByPageUrl(nextPage)
+        .then(nextList => {
+          console.log('HOME ', nextList);
 
-        setCaracters([...characters, ...nextList.characters]);
-        setNextPage(nextList.nextPage);
-      });
+          setCaracters([...characters, ...nextList.characters]);
+          setNextPage(nextList.nextPage);
+        })
+        .finally(() => {
+          setNextLoading(false);
+        });
     }
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={characters}
         renderItem={renderItem}
@@ -79,6 +91,7 @@ const HomeScreen = ({navigation}: Props) => {
         contentContainerStyle={styles.listContainer}
         onEndReached={_getNextCharacters}
       />
+      {nextLoading && <ActivityIndicator animating />}
     </SafeAreaView>
   );
 };
@@ -86,6 +99,10 @@ const HomeScreen = ({navigation}: Props) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
   listContainer: {
     alignItems: 'center',
   },

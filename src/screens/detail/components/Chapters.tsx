@@ -1,27 +1,24 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {detailBoxBlue} from '../../../theme/tenant';
+import {Theme} from '../../../theme/theme';
 
 interface Props {
   chapters: string[];
 }
 
 const Chapters = ({chapters}: Props) => {
-  const ChapterRenderer = ({
-    chapter,
-    idKey,
-  }: {
-    chapter: string;
-    idKey: string;
-  }) => {
-    return <Text key={idKey}>{chapter}</Text>;
+  const ChapterRenderer = ({chapter}: {chapter: string}) => {
+    return <Text>{chapter}</Text>;
   };
 
   return (
     <View style={styles.container}>
       <Text>Featured chapters:</Text>
       {chapters.map((chapter, index) => (
-        <ChapterRenderer idKey={chapter + index} chapter={chapter} />
+        <ChapterRenderer
+          key={`${chapter}_${index.toString()}`}
+          chapter={chapter}
+        />
       ))}
     </View>
   );
@@ -33,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderRadius: 20,
-    backgroundColor: detailBoxBlue,
+    backgroundColor: Theme.lightDetailBoxBlue,
     padding: 10,
   },
 });

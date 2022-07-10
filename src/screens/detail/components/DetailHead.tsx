@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {RoundImage, Spacer} from '../../../components';
-import {deviceWidth} from '../../../theme/tenant';
+import {DeviceInfo} from '../../../theme/tenant';
 
 interface Props {
   name: string;
@@ -11,7 +11,7 @@ interface Props {
 const DetailHead = ({name, image}: Props) => {
   return (
     <View style={styles.container}>
-      <RoundImage image={image} size={deviceWidth / 2} />
+      <RoundImage image={image} size={DeviceInfo.deviceWidth / 1.5} />
       <Spacer />
       <Text style={styles.nameStyle}>{name}</Text>
     </View>

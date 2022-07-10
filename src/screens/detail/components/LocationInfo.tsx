@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Location} from 'rickmortyapi/dist/interfaces';
-import {detailBoxBlue} from '../../../theme/tenant';
+import {Theme} from '../../../theme/theme';
 
 interface Props {
   locationType: 'origin' | 'lastSeen';
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderRadius: 20,
-    backgroundColor: detailBoxBlue,
+    backgroundColor: Theme.lightDetailBoxBlue,
     padding: 10,
   },
 

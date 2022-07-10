@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
-import {detailBoxBlue} from '../../../theme/tenant';
+import {Theme} from '../../../theme/theme';
 
 interface Props {
   info: Character;
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderRadius: 20,
-    backgroundColor: detailBoxBlue,
+    backgroundColor: Theme.lightDetailBoxBlue,
     padding: 10,
   },
 });

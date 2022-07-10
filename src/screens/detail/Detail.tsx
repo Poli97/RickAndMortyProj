@@ -1,5 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text} from 'react-native';
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import {Character, Location} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
 import {
@@ -7,12 +12,13 @@ import {
   StackNavigatorRoutes,
   StackRouteProp,
 } from '../../routes/stackRouteList';
+import Chapters from './components/Chapters';
 import DetailHead from './components/DetailHead';
 import DetailInfo from './components/DetailInfo';
 import LocationInfo from './components/LocationInfo';
 
 export type DetailScreenParams = {
-  id?: number;
+  id: number;
 };
 
 interface Props {
@@ -20,16 +26,23 @@ interface Props {
   route: StackRouteProp<StackNavigatorRoutes.Detail>;
 }
 
+interface ILocation {
+  location: Location | undefined;
+  isKnown: boolean;
+}
+
 const DetailScreen = ({route}: Props) => {
   const id = route.params.id || 1;
+
+  const [loading, setLoading] = useState(true);
   const [characterInfo, setCharacterInfo] = useState(
     undefined as Character | undefined,
   );
   const [lastSeenInfo, setLastSeenInfo] = useState(
-    undefined as Location | undefined,
+    undefined as ILocation | undefined,
   );
   const [originInfo, setOriginInfo] = useState(
-    undefined as Location | undefined,
+    undefined as ILocation | undefined,
   );
   const [chaptersNames, setChaptersNames] = useState([] as string[]);
 
@@ -38,6 +51,7 @@ const DetailScreen = ({route}: Props) => {
   }, [id]);
 
   const _getAllCharacterInfos = async (charId: number) => {
+    setLoading(true);
     try {
       const charInfos = await Backend.Character.getCharacterById(charId);
       setCharacterInfo(charInfos);
@@ -46,19 +60,21 @@ const DetailScreen = ({route}: Props) => {
         const url = charInfos.location.url;
         if (url) {
           const location = await Backend.Location.getLocationByUrl(url);
-          setLastSeenInfo(location);
+          setLastSeenInfo({location: location, isKnown: true});
         } else {
-          console.log('Unknown location');
+          console.log('Unknown last location');
+          setLastSeenInfo({location: undefined, isKnown: false});
         }
       }
 
       if (charInfos) {
         const url = charInfos.origin.url;
         if (url) {
-          const origin = await Backend.Location.getOriginByUrl(url);
-          setOriginInfo(origin);
+          const origin = await Backend.Location.getLocationByUrl(url);
+          setOriginInfo({location: origin, isKnown: true});
         } else {
-          console.log('Unknown location');
+          console.log('Unknown origin');
+          setOriginInfo({location: undefined, isKnown: false});
         }
       }
 
@@ -70,12 +86,15 @@ const DetailScreen = ({route}: Props) => {
       }
     } catch (err) {
       console.log('_getAllCharacterInfos ERROR ', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.scrollContainer}>
+        {loading && <ActivityIndicator size={'large'} />}
         {characterInfo && (
           <>
             <DetailHead image={characterInfo.image} name={characterInfo.name} />
@@ -84,16 +103,22 @@ const DetailScreen = ({route}: Props) => {
         )}
 
         {originInfo && (
-          <LocationInfo locationType="origin" originInfo={originInfo} />
+          <LocationInfo
+            locationType="origin"
+            locationInfo={originInfo.location}
+            isKnown={originInfo.isKnown}
+          />
         )}
 
         {lastSeenInfo && (
-          <LocationInfo locationType="lastSeen" originInfo={lastSeenInfo} />
+          <LocationInfo
+            locationType="lastSeen"
+            locationInfo={lastSeenInfo.location}
+            isKnown={lastSeenInfo.isKnown}
+          />
         )}
 
-        {chaptersNames.map(n => (
-          <Text>{n}</Text>
-        ))}
+        {chaptersNames && <Chapters chapters={chaptersNames} />}
       </ScrollView>
     </SafeAreaView>
   );

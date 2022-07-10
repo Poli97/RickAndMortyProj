@@ -5,10 +5,11 @@ import {detailBoxBlue} from '../../../theme/tenant';
 
 interface Props {
   locationType: 'origin' | 'lastSeen';
-  originInfo: Location;
+  locationInfo: Location | undefined;
+  isKnown: boolean;
 }
 
-const LocationInfo = ({locationType, originInfo}: Props) => {
+const LocationInfo = ({locationType, locationInfo, isKnown}: Props) => {
   let title = '';
 
   switch (locationType) {
@@ -25,11 +26,23 @@ const LocationInfo = ({locationType, originInfo}: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text>{title}</Text>
-      <Text>{originInfo.name}</Text>
-      <Text>Type: {originInfo.type}</Text>
-      <Text>Dimension: {originInfo.dimension}</Text>
-      <Text>Residents: {originInfo.residents.length}</Text>
+      <Text style={styles.titleStyle}>{title}</Text>
+
+      <View style={styles.boxStyle}>
+        {locationInfo && isKnown && (
+          <>
+            <Text>{locationInfo.name}</Text>
+            <Text>Type: {locationInfo.type}</Text>
+            <Text>Dimension: {locationInfo.dimension}</Text>
+            <Text>Residents: {locationInfo.residents.length}</Text>
+          </>
+        )}
+        {!isKnown && (
+          <>
+            <Text>Location Unknown</Text>
+          </>
+        )}
+      </View>
     </View>
   );
 };
@@ -42,5 +55,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: detailBoxBlue,
     padding: 10,
+  },
+
+  titleStyle: {
+    fontWeight: 'bold',
+  },
+
+  boxStyle: {
+    paddingLeft: 10,
+    paddingTop: 5,
   },
 });

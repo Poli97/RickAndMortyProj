@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
 import {Spacer} from '../../components';
@@ -20,6 +20,7 @@ interface Props {
 const HomeScreen = ({navigation}: Props) => {
   const [characters, setCaracters] = useState([] as Character[]);
   const [loading, setLoading] = useState(true);
+  const [nextPage, setNextPage] = useState(null as string | null);
 
   useEffect(() => {
     _getCharactersList();
@@ -38,17 +39,33 @@ const HomeScreen = ({navigation}: Props) => {
 
   const _getCharactersList = () => {
     setLoading(true);
+    setCaracters([]);
+    setNextPage(null);
     Backend.Character.getAllCharacters()
-      .then(chars => {
-        console.log('HOME ', chars);
-        setCaracters(chars);
+      .then(homeList => {
+        console.log('HOME ', homeList);
+        setCaracters(homeList.characters);
+        setNextPage(homeList.nextPage);
         setLoading(false);
       })
       .catch(err => {
         console.log(err);
         setCaracters([]);
+        setNextPage(null);
         setLoading(false);
       });
+  };
+
+  const _getNextCharacters = () => {
+    console.log('End reached');
+    if (nextPage) {
+      Backend.Character.getAllCharactersByPageUrl(nextPage).then(nextList => {
+        console.log('HOME ', nextList);
+
+        setCaracters([...characters, ...nextList.characters]);
+        setNextPage(nextList.nextPage);
+      });
+    }
   };
 
   return (
@@ -59,9 +76,17 @@ const HomeScreen = ({navigation}: Props) => {
         ItemSeparatorComponent={() => <Spacer space={40} />}
         refreshing={loading}
         onRefresh={_getCharactersList}
+        contentContainerStyle={styles.listContainer}
+        onEndReached={_getNextCharacters}
       />
     </SafeAreaView>
   );
 };
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  listContainer: {
+    alignItems: 'center',
+  },
+});

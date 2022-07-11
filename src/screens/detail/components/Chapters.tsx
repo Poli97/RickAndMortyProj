@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {B} from '../../../components';
 import {Theme} from '../../../theme/theme';
 
 interface Props {
@@ -13,13 +14,15 @@ const Chapters = ({chapters}: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text>Featured chapters:</Text>
-      {chapters.map((chapter, index) => (
-        <ChapterRenderer
-          key={`${chapter}_${index.toString()}`}
-          chapter={chapter}
-        />
-      ))}
+      <B>Featured chapters:</B>
+      <View style={styles.boxStyle}>
+        {chapters.map((chapter, index) => (
+          <ChapterRenderer
+            key={`${chapter}_${index.toString()}`}
+            chapter={chapter}
+          />
+        ))}
+      </View>
     </View>
   );
 };
@@ -32,5 +35,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: Theme.lightDetailBoxBlue,
     padding: 10,
+  },
+
+  boxStyle: {
+    paddingLeft: 10,
+    paddingTop: 5,
   },
 });

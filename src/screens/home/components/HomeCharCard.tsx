@@ -11,6 +11,14 @@ interface Props {
 }
 
 const HomeCharCard = ({character, onPress}: Props) => {
+  const getWord = (length: number) => {
+    if (length === 1) {
+      return 'episode';
+    }
+
+    return 'episodes';
+  };
+
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
@@ -18,9 +26,7 @@ const HomeCharCard = ({character, onPress}: Props) => {
 
         <Image source={{uri: character.image}} style={styles.image} />
         <Spacer />
-        <View style={styles.nameBox}>
-          <B>{character.name}</B>
-        </View>
+        <Text style={styles.nameBox}>{character.name}</Text>
 
         <View style={styles.infoBox}>
           <Text>
@@ -34,6 +40,10 @@ const HomeCharCard = ({character, onPress}: Props) => {
           <Text>
             <B>Last known location: </B>
             {character.location.name}
+          </Text>
+          <Text>
+            <B>Appears in: </B>
+            {character.episode.length} {getWord(character.episode.length)}
           </Text>
         </View>
       </View>
@@ -66,7 +76,9 @@ const styles = StyleSheet.create({
   },
 
   nameBox: {
-    alignItems: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
   },
 
   infoBox: {

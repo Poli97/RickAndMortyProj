@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Location} from 'rickmortyapi/dist/interfaces';
+import {B} from '../../../components';
 import {Theme} from '../../../theme/theme';
 
 interface Props {
@@ -26,15 +27,23 @@ const LocationInfo = ({locationType, locationInfo, isKnown}: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleStyle}>{title}</Text>
+      <Text>
+        <B>{title}</B> {locationInfo && <B>{locationInfo.name}</B>}
+      </Text>
 
       <View style={styles.boxStyle}>
         {locationInfo && isKnown && (
           <>
-            <Text>{locationInfo.name}</Text>
-            <Text>Type: {locationInfo.type}</Text>
-            <Text>Dimension: {locationInfo.dimension}</Text>
-            <Text>Residents: {locationInfo.residents.length}</Text>
+            <Text>
+              <B>Type: </B>
+              {locationInfo.type}
+            </Text>
+            <Text>
+              <B>Dimension: </B> {locationInfo.dimension}
+            </Text>
+            <Text>
+              <B>Residents: </B> {locationInfo.residents.length}
+            </Text>
           </>
         )}
         {!isKnown && (

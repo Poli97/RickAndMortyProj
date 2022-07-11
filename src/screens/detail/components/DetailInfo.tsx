@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
+import {B} from '../../../components';
 import {Theme} from '../../../theme/theme';
 
 interface Props {
@@ -10,10 +11,18 @@ interface Props {
 const DetailInfo = ({info}: Props) => {
   return (
     <View style={styles.container}>
-      <Text>Gender: {info.gender}</Text>
-      <Text>Species: {info.species}</Text>
-      <Text>Type: {info.type}</Text>
-      <Text>Status: {info.status}</Text>
+      <Text>
+        <B>Gender: </B>
+        {info.gender}
+      </Text>
+      <Text>
+        <B>Species: </B>
+        {info.species}
+      </Text>
+      <Text>
+        <B>Type: </B>
+        {info.type ? info.type : 'unspecified'}
+      </Text>
     </View>
   );
 };

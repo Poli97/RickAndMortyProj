@@ -1,12 +1,16 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {ICharacterStatus} from '../../../core/interfaces/character.interface';
+import {ICharacterStatus} from '../core/interfaces/character.interface';
 
 interface Props {
   status: ICharacterStatus;
+  position: {
+    top: number;
+    left: number;
+  };
 }
 
-const AliveBadge = ({status}: Props) => {
+const AliveBadge = ({status, position}: Props) => {
   let bgColor = 'transparent';
 
   switch (status) {
@@ -19,10 +23,16 @@ const AliveBadge = ({status}: Props) => {
     case 'unknown':
       bgColor = 'gray';
       break;
+    default:
+      bgColor = 'transparent';
   }
 
   return (
-    <View style={[styles.container, {backgroundColor: bgColor}]}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: bgColor, top: position.top, left: position.left},
+      ]}>
       <Text style={styles.textStyle}>{status}</Text>
     </View>
   );
@@ -32,12 +42,10 @@ export default AliveBadge;
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    zIndex: 10,
-    backgroundColor: 'red',
     padding: 2,
+    borderRadius: 5,
+    position: 'absolute',
+    zIndex: 10,
   },
 
   textStyle: {

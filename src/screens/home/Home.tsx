@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
-import {Spacer} from '../../components';
+import {ErrorBox, Spacer} from '../../components';
 import {
   StackNavigationProp,
   StackNavigatorRoutes,
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const HomeScreen = ({navigation}: Props) => {
-  const [characters, setCaracters] = useState([] as Character[]);
+  const [characters, setCaracters] = useState([] as Character[] | null);
   const [loading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState(null as string | null);
   const [nextLoading, setNextLoading] = useState(false);
@@ -43,6 +43,10 @@ const HomeScreen = ({navigation}: Props) => {
     );
   };
 
+  const renderSeparator = () => {
+    return <Spacer space={30} />;
+  };
+
   const _getCharactersList = () => {
     setLoading(true);
     setCaracters([]);
@@ -57,7 +61,7 @@ const HomeScreen = ({navigation}: Props) => {
       })
       .catch(err => {
         console.log(err);
-        setCaracters([]);
+        setCaracters(null);
         setNextPage(null);
         setLoading(false);
       });
@@ -71,7 +75,7 @@ const HomeScreen = ({navigation}: Props) => {
         .then(nextList => {
           console.log('HOME ', nextList);
 
-          setCaracters([...characters, ...nextList.characters]);
+          setCaracters([...(characters || []), ...nextList.characters]);
           setNextPage(nextList.nextPage);
         })
         .finally(() => {
@@ -82,15 +86,24 @@ const HomeScreen = ({navigation}: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={characters}
-        renderItem={renderItem}
-        ItemSeparatorComponent={() => <Spacer space={40} />}
-        refreshing={loading}
-        onRefresh={_getCharactersList}
-        contentContainerStyle={styles.listContainer}
-        onEndReached={_getNextCharacters}
-      />
+      {characters && (
+        <FlatList
+          data={characters}
+          renderItem={renderItem}
+          ItemSeparatorComponent={renderSeparator}
+          refreshing={loading}
+          onRefresh={_getCharactersList}
+          contentContainerStyle={styles.listContainer}
+          onEndReached={_getNextCharacters}
+        />
+      )}
+      {!characters && (
+        <ErrorBox
+          message="An error occured while trying to get the character list."
+          secondMessage="Please try again later."
+          onPress={_getCharactersList}
+        />
+      )}
       {nextLoading && <ActivityIndicator animating />}
     </SafeAreaView>
   );
@@ -105,5 +118,6 @@ const styles = StyleSheet.create({
 
   listContainer: {
     alignItems: 'center',
+    paddingTop: 10,
   },
 });

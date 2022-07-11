@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {Character, Location} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
+import {Spacer} from '../../components';
 import {
   StackNavigationProp,
   StackNavigatorRoutes,
@@ -32,7 +33,7 @@ interface ILocation {
 }
 
 const DetailScreen = ({route}: Props) => {
-  const id = route.params.id || 1;
+  const id = route.params.id;
 
   const [loading, setLoading] = useState(true);
   const [characterInfo, setCharacterInfo] = useState(
@@ -95,30 +96,47 @@ const DetailScreen = ({route}: Props) => {
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.scrollContainer}>
         {loading && <ActivityIndicator size={'large'} />}
-        {characterInfo && (
+        {!loading && (
           <>
-            <DetailHead image={characterInfo.image} name={characterInfo.name} />
-            <DetailInfo info={characterInfo} />
+            {characterInfo && (
+              <>
+                <DetailHead
+                  image={characterInfo.image}
+                  name={characterInfo.name}
+                  status={characterInfo.status}
+                />
+
+                <Spacer />
+
+                <DetailInfo info={characterInfo} />
+
+                <Spacer />
+
+                {originInfo && (
+                  <LocationInfo
+                    locationType="origin"
+                    locationInfo={originInfo.location}
+                    isKnown={originInfo.isKnown}
+                  />
+                )}
+
+                <Spacer />
+
+                {lastSeenInfo && (
+                  <LocationInfo
+                    locationType="lastSeen"
+                    locationInfo={lastSeenInfo.location}
+                    isKnown={lastSeenInfo.isKnown}
+                  />
+                )}
+
+                <Spacer />
+
+                {chaptersNames && <Chapters chapters={chaptersNames} />}
+              </>
+            )}
           </>
         )}
-
-        {originInfo && (
-          <LocationInfo
-            locationType="origin"
-            locationInfo={originInfo.location}
-            isKnown={originInfo.isKnown}
-          />
-        )}
-
-        {lastSeenInfo && (
-          <LocationInfo
-            locationType="lastSeen"
-            locationInfo={lastSeenInfo.location}
-            isKnown={lastSeenInfo.isKnown}
-          />
-        )}
-
-        {chaptersNames && <Chapters chapters={chaptersNames} />}
       </ScrollView>
     </SafeAreaView>
   );

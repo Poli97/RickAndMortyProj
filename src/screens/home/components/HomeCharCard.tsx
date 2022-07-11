@@ -1,10 +1,9 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Character} from 'rickmortyapi/dist/interfaces';
-import {B, Spacer} from '../../../components';
+import {AliveBadge, B, Spacer} from '../../../components';
 import {DeviceInfo} from '../../../theme/tenant';
 import {Theme} from '../../../theme/theme';
-import AliveBadge from './AliveBadge';
 
 interface Props {
   character: Character;
@@ -15,14 +14,15 @@ const HomeCharCard = ({character, onPress}: Props) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
-        <AliveBadge status={character.status} />
+        <AliveBadge status={character.status} position={{top: 10, left: 10}} />
+
         <Image source={{uri: character.image}} style={styles.image} />
         <Spacer />
-        <View style={{alignItems: 'center'}}>
+        <View style={styles.nameBox}>
           <B>{character.name}</B>
         </View>
 
-        <View style={{padding: 10}}>
+        <View style={styles.infoBox}>
           <Text>
             <B>Species: </B>
             {character.species} {character.type ? '- ' + character.type : ''}
@@ -56,5 +56,20 @@ const styles = StyleSheet.create({
     height: DeviceInfo.deviceWidth * 0.8,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
+  },
+
+  badgePosition: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 10,
+  },
+
+  nameBox: {
+    alignItems: 'center',
+  },
+
+  infoBox: {
+    padding: 10,
   },
 });

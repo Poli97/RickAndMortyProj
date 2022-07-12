@@ -1,11 +1,11 @@
 ﻿# RickAndMortyProj
 Cloud Academy Mobile Assignment.
-The project is created with **React Native 0.65.1** (**React 17.0.2**). It has been initialized using a TypeScript template (**TypeScript 3.8.3**).
+The project is created with **React Native 0.65.1** (**React 17.0.2**). It has been initialized using a TypeScript template (**TypeScript 4.7.4**).
 
 ## Libraries
 
  - **React Navigation 6**: for navigation.
- - **rickmortyapi**: for interfaces only (not server calls, which are made with **fetch**).
+ - **rickmortyapi**: for interfaces only (not server calls, which are made with **fetch** API).
 
 ## Project structure
 
@@ -24,9 +24,7 @@ The project is created with **React Native 0.65.1** (**React 17.0.2**). It has b
  ┃ ┃ ┣ 📂components  
  ┃ ┗ 📂home  
  ┃ ┃ ┣ 📂components  
- ┗ 📂theme  
-📜App.tsx
-📜index.js
+ ┗ 📂theme
 ```
 
  - **communications:** contains all the server calls, divided by corresponding functionality (**chapters**, **characters**, **locations**).

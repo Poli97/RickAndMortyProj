@@ -3,8 +3,8 @@
 Cloud Academy Mobile Assignment.
 The project is created with **React Native 0.65.1** (**React 17.0.2**). It has been initialized using a TypeScript template (**TypeScript 4.7.4**).
 
-<img src="/gitImages/screen1.png" width="250"/>
-[<img src="/gitImages/screen2.png" width="250"/>](Detail Screen)
+<img src="/gitImages/screen1.png" alt="Home screen" width="250"/>
+<img src="/gitImages/screen2.png" alt="Detail screen" width="250"/>
 
 ## Libraries
 

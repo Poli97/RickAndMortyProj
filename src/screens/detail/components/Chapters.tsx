@@ -1,21 +1,27 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
+import {IEpisodeClient} from '../../../communications/chapters/chapters.interface';
 import {B} from '../../../components';
-import {Theme} from '../../../theme/theme';
+import {SharedCss} from '../../../theme/sharedCss';
 
 interface Props {
-  chapters: string[];
+  chapters: IEpisodeClient[];
 }
 
 const Chapters = ({chapters}: Props) => {
-  const ChapterRenderer = ({chapter}: {chapter: string}) => {
-    return <Text>{chapter}</Text>;
+  const ChapterRenderer = ({chapter}: {chapter: IEpisodeClient}) => {
+    return (
+      <Text>
+        <B>{chapter.episode + ': '}</B>
+        {chapter.name}
+      </Text>
+    );
   };
 
   return (
-    <View style={styles.container}>
+    <View style={SharedCss.infoBox}>
       <B>Featured chapters:</B>
-      <View style={styles.boxStyle}>
+      <View style={SharedCss.dataInInfoBox}>
         {chapters.map((chapter, index) => (
           <ChapterRenderer
             key={`${chapter}_${index.toString()}`}
@@ -28,17 +34,3 @@ const Chapters = ({chapters}: Props) => {
 };
 
 export default Chapters;
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderRadius: 20,
-    backgroundColor: Theme.lightDetailBoxBlue,
-    padding: 10,
-  },
-
-  boxStyle: {
-    paddingLeft: 10,
-    paddingTop: 5,
-  },
-});

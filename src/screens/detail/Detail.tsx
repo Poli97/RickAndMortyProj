@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {Character, Location} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
+import {IEpisodeClient} from '../../communications/chapters/chapters.interface';
 import {Spacer} from '../../components';
 import {
   StackNavigationProp,
@@ -45,7 +46,7 @@ const DetailScreen = ({route}: Props) => {
   const [originInfo, setOriginInfo] = useState(
     undefined as ILocation | undefined,
   );
-  const [chaptersNames, setChaptersNames] = useState([] as string[]);
+  const [chapters, setChaptersNames] = useState([] as IEpisodeClient[]);
 
   useEffect(() => {
     _getAllCharacterInfos(id);
@@ -80,10 +81,10 @@ const DetailScreen = ({route}: Props) => {
       }
 
       if (charInfos) {
-        const chaptersN = await Backend.Chapter.getChaptersNamesByUrls(
+        const chaptersRes = await Backend.Chapter.getChaptersNamesByUrls(
           charInfos.episode,
         );
-        setChaptersNames(chaptersN);
+        setChaptersNames(chaptersRes);
       }
     } catch (err) {
       console.log('_getAllCharacterInfos ERROR ', err);
@@ -132,7 +133,7 @@ const DetailScreen = ({route}: Props) => {
 
                 <Spacer />
 
-                {chaptersNames && <Chapters chapters={chaptersNames} />}
+                {chapters && <Chapters chapters={chapters} />}
               </>
             )}
           </>

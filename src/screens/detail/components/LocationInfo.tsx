@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import {Location} from 'rickmortyapi/dist/interfaces';
 import {B} from '../../../components';
-import {Theme} from '../../../theme/theme';
+import {SharedCss} from '../../../theme/sharedCss';
 
 interface Props {
   locationType: 'origin' | 'lastSeen';
@@ -26,12 +26,12 @@ const LocationInfo = ({locationType, locationInfo, isKnown}: Props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={SharedCss.infoBox}>
       <Text>
         <B>{title}</B> {locationInfo && <B>{locationInfo.name}</B>}
       </Text>
 
-      <View style={styles.boxStyle}>
+      <View style={SharedCss.dataInInfoBox}>
         {locationInfo && isKnown && (
           <>
             <Text>
@@ -57,21 +57,3 @@ const LocationInfo = ({locationType, locationInfo, isKnown}: Props) => {
 };
 
 export default LocationInfo;
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderRadius: 20,
-    backgroundColor: Theme.lightDetailBoxBlue,
-    padding: 10,
-  },
-
-  titleStyle: {
-    fontWeight: 'bold',
-  },
-
-  boxStyle: {
-    paddingLeft: 10,
-    paddingTop: 5,
-  },
-});

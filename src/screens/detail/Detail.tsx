@@ -8,7 +8,7 @@ import {
 import {Character, Location} from 'rickmortyapi/dist/interfaces';
 import {Backend} from '../../communications';
 import {IEpisodeClient} from '../../communications/chapters/chapters.interface';
-import {Spacer} from '../../components';
+import {ErrorBox, Spacer} from '../../components';
 import {
   StackNavigationProp,
   StackNavigatorRoutes,
@@ -56,6 +56,7 @@ const DetailScreen = ({route}: Props) => {
     setLoading(true);
     try {
       const charInfos = await Backend.Character.getCharacterById(charId);
+      console.log('Carjingos ', charInfos);
       setCharacterInfo(charInfos);
 
       if (charInfos) {
@@ -135,6 +136,12 @@ const DetailScreen = ({route}: Props) => {
 
                 {chapters && <Chapters chapters={chapters} />}
               </>
+            )}
+            {!characterInfo && (
+              <ErrorBox
+                message="Error loading character detalis"
+                secondMessage="Please try again later"
+              />
             )}
           </>
         )}

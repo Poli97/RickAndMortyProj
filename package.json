@@ -51,6 +51,9 @@
       "jsx",
       "json",
       "node"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/outputs/"
     ]
   }
 }

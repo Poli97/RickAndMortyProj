@@ -1,10 +1,15 @@
 ﻿# RickAndMortyProj
 
 Cloud Academy Mobile Assignment.
+
 The project is created with **React Native 0.65.1** (**React 17.0.2**). It has been initialized using a TypeScript template (**TypeScript 4.7.4**).
 
-![Alt text](/gitImages/screen1.png 'Home screen')
-![Alt text](/gitImages/screen2.png 'Detail screen')
+<p>
+  <img src="/gitImages/screen1.png" alt="Home screen" width="250"/>
+  <img src="/gitImages/screen2.png" alt="Detail screen" width="250"/>
+</p>
+
+The Home page implements a pagination system, so when you scroll to the end of the list, a new call to the next page is made that adds new results at the end.
 
 ## Libraries
 
